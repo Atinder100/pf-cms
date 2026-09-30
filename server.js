@@ -1,15 +1,30 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+import express from "express";
 
-const express = require("express");
-const pool = require("./src/config/db");
+import pool from "./src/config/db.js";
+import authRoutes from "./src/routes/authRoutes.js";
+import aboutRoutes from "./src/routes/aboutRoutes.js";
+import skillsRoutes from "./src/routes/skillsRoutes.js";
+import projectsRoutes from "./src/routes/projectsRoutes.js";
+import blogsRoutes from "./src/routes/blogsRoutes.js";
+import experienceRoutes from "./src/routes/experienceRoutes.js";
+import testimonialsRoutes from "./src/routes/testimonialsRoutes.js";
+import servicesRoutes from "./src/routes/servicesRoutes.js";
 
-const authRoutes = require("./src/routes/authRoutes");
+dotenv.config();
 
 const app = express();
 
 app.use(express.json());
 
 app.use("/auth", authRoutes);
+app.use("/api/about", aboutRoutes);
+app.use("/api/skills", skillsRoutes);
+app.use("/api/projects", projectsRoutes);
+app.use("/api/blogs", blogsRoutes);
+app.use("/api/experience", experienceRoutes);
+app.use("/api/testimonials", testimonialsRoutes);
+app.use("/api/services", servicesRoutes);
 
 app.get("/", (req, res) => {
   res.json({

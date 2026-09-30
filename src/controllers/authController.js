@@ -1,9 +1,10 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
-const pool = require("../config/db");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
-const login = async (req, res) => {
+import pool from "../config/db.js";
+
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -37,7 +38,6 @@ const login = async (req, res) => {
       });
     }
 
-    // Create access token
     const accessToken = jwt.sign(
       {
         id: user.id,
@@ -50,10 +50,8 @@ const login = async (req, res) => {
       }
     );
 
-    // Create refresh token
     const refreshToken = crypto.randomBytes(64).toString("hex");
 
-    // Refresh token expires in 7 days
     const expiresAt = new Date(
       Date.now() + 7 * 24 * 60 * 60 * 1000
     );
@@ -84,7 +82,7 @@ const login = async (req, res) => {
   }
 };
 
-const refresh = async (req, res) => {
+export const refresh = async (req, res) => {
   try {
     const { refreshToken } = req.body;
 
@@ -149,9 +147,4 @@ const refresh = async (req, res) => {
       message: "Server error",
     });
   }
-};
-
-module.exports = {
-  login,
-  refresh,
 };
