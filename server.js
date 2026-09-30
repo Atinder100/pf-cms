@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
+import multer from "multer";
 
 import pool from "./src/config/db.js";
 import authRoutes from "./src/routes/authRoutes.js";
@@ -10,6 +11,7 @@ import blogsRoutes from "./src/routes/blogsRoutes.js";
 import experienceRoutes from "./src/routes/experienceRoutes.js";
 import testimonialsRoutes from "./src/routes/testimonialsRoutes.js";
 import servicesRoutes from "./src/routes/servicesRoutes.js";
+import uploadRoutes from "./src/routes/uploadRoutes.js";
 
 dotenv.config();
 
@@ -25,6 +27,7 @@ app.use("/api/blogs", blogsRoutes);
 app.use("/api/experience", experienceRoutes);
 app.use("/api/testimonials", testimonialsRoutes);
 app.use("/api/services", servicesRoutes);
+app.use("/upload", uploadRoutes);
 
 app.get("/", (req, res) => {
   res.json({
@@ -53,4 +56,23 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({
+      message: err.message,
+    });
+  }
+
+  if (err.message === "Only image files are allowed") {
+    return res.status(400).json({
+      message: err.message,
+    });
+  }
+
+  return res.status(500).json({
+    message: "Something went wrong",
+    error: err.message,
+  });
 });
