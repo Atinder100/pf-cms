@@ -2,16 +2,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function Projects() {
-  const [projects, setProjects] = useState([]);
+function Testimonials() {
+  const [testimonials, setTestimonials] = useState([]);
 
   const [form, setForm] = useState({
-    title: "",
-    description: "",
+    name: "",
+    role: "",
+    message: "",
     image: "",
-    technologies: "",
-    live_url: "",
-    github_url: "",
   });
 
   const [imageFile, setImageFile] = useState(null);
@@ -24,13 +22,13 @@ function Projects() {
   const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    fetchProjects();
+    fetchTestimonials();
   }, []);
 
-  const fetchProjects = async () => {
+  const fetchTestimonials = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/projects",
+        "http://localhost:5000/api/testimonials",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -38,10 +36,10 @@ function Projects() {
         }
       );
 
-      setProjects(response.data);
+      setTestimonials(response.data);
     } catch (error) {
-      console.error("Failed to fetch projects:", error);
-      setMessage("Failed to load projects");
+      console.error("Failed to fetch testimonials:", error);
+      setMessage("Failed to load testimonials");
     } finally {
       setLoading(false);
     }
@@ -103,22 +101,17 @@ function Projects() {
     setMessage("");
 
     try {
-      const projectData = {
-        title: form.title,
-        description: form.description,
+      const testimonialData = {
+        name: form.name,
+        role: form.role || null,
+        message: form.message,
         image: form.image || null,
-        technologies: form.technologies
-          .split(",")
-          .map((item) => item.trim())
-          .filter((item) => item !== ""),
-        live_url: form.live_url || null,
-        github_url: form.github_url || null,
       };
 
       if (editingId) {
         await axios.put(
-          `http://localhost:5000/api/projects/${editingId}`,
-          projectData,
+          `http://localhost:5000/api/testimonials/${editingId}`,
+          testimonialData,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -126,11 +119,11 @@ function Projects() {
           }
         );
 
-        setMessage("Project updated successfully");
+        setMessage("Testimonial updated successfully");
       } else {
         await axios.post(
-          "http://localhost:5000/api/projects",
-          projectData,
+          "http://localhost:5000/api/testimonials",
+          testimonialData,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -138,42 +131,39 @@ function Projects() {
           }
         );
 
-        setMessage("Project created successfully");
+        setMessage("Testimonial created successfully");
       }
 
       resetForm();
-      fetchProjects();
+      fetchTestimonials();
     } catch (error) {
-      console.error("Failed to save project:", error);
+      console.error("Failed to save testimonial:", error);
 
       setMessage(
-        error.response?.data?.message || "Failed to save project"
+        error.response?.data?.message ||
+          "Failed to save testimonial"
       );
     } finally {
       setSaving(false);
     }
   };
 
-  const handleEdit = (project) => {
+  const handleEdit = (testimonial) => {
     setForm({
-      title: project.title || "",
-      description: project.description || "",
-      image: project.image || "",
-      technologies: Array.isArray(project.technologies)
-        ? project.technologies.join(", ")
-        : "",
-      live_url: project.live_url || "",
-      github_url: project.github_url || "",
+      name: testimonial.name || "",
+      role: testimonial.role || "",
+      message: testimonial.message || "",
+      image: testimonial.image || "",
     });
 
     setImageFile(null);
-    setEditingId(project.id);
+    setEditingId(testimonial.id);
     setMessage("");
   };
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this project?"
+      "Are you sure you want to delete this testimonial?"
     );
 
     if (!confirmed) {
@@ -182,7 +172,7 @@ function Projects() {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/projects/${id}`,
+        `http://localhost:5000/api/testimonials/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -190,25 +180,24 @@ function Projects() {
         }
       );
 
-      setMessage("Project deleted successfully");
-      fetchProjects();
+      setMessage("Testimonial deleted successfully");
+      fetchTestimonials();
     } catch (error) {
-      console.error("Failed to delete project:", error);
+      console.error("Failed to delete testimonial:", error);
 
       setMessage(
-        error.response?.data?.message || "Failed to delete project"
+        error.response?.data?.message ||
+          "Failed to delete testimonial"
       );
     }
   };
 
   const resetForm = () => {
     setForm({
-      title: "",
-      description: "",
+      name: "",
+      role: "",
+      message: "",
       image: "",
-      technologies: "",
-      live_url: "",
-      github_url: "",
     });
 
     setImageFile(null);
@@ -223,7 +212,9 @@ function Projects() {
   if (loading) {
     return (
       <div className="flex min-h-[300px] items-center justify-center">
-        <p className="text-sm text-slate-500">Loading Projects...</p>
+        <p className="text-sm text-slate-500">
+          Loading Testimonials...
+        </p>
       </div>
     );
   }
@@ -233,10 +224,11 @@ function Projects() {
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-          Projects
+          Testimonials
         </h1>
+
         <p className="mt-2 text-slate-500">
-          Add, edit, and manage the projects displayed in your portfolio.
+          Manage testimonials displayed on your portfolio.
         </p>
       </div>
 
@@ -247,59 +239,82 @@ function Projects() {
         </div>
       )}
 
-      {/* Project Form */}
+      {/* Form */}
       <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
         <div className="border-b border-slate-200 px-6 py-5">
           <h2 className="text-lg font-semibold text-slate-900">
-            {editingId ? "Edit Project" : "Add Project"}
+            {editingId
+              ? "Edit Testimonial"
+              : "Add Testimonial"}
           </h2>
 
           <p className="mt-1 text-sm text-slate-500">
             {editingId
-              ? "Update the selected project."
-              : "Add a new project to your portfolio."}
+              ? "Update the selected testimonial."
+              : "Add a new testimonial to your portfolio."}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 p-6">
-          {/* Title */}
-          <div>
-            <label
-              htmlFor="title"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Title
-            </label>
+          {/* Name + Role */}
+          <div className="grid gap-6 md:grid-cols-2">
+            <div>
+              <label
+                htmlFor="name"
+                className="mb-2 block text-sm font-medium text-slate-700"
+              >
+                Name
+              </label>
 
-            <input
-              id="title"
-              type="text"
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              required
-              placeholder="e.g. Portfolio CMS"
-              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
-            />
+              <input
+                id="name"
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                required
+                placeholder="e.g. John Doe"
+                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="role"
+                className="mb-2 block text-sm font-medium text-slate-700"
+              >
+                Role
+              </label>
+
+              <input
+                id="role"
+                type="text"
+                name="role"
+                value={form.role}
+                onChange={handleChange}
+                placeholder="e.g. Client, CEO, Developer"
+                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+              />
+            </div>
           </div>
 
-          {/* Description */}
+          {/* Message */}
           <div>
             <label
-              htmlFor="description"
+              htmlFor="message"
               className="mb-2 block text-sm font-medium text-slate-700"
             >
-              Description
+              Message
             </label>
 
             <textarea
-              id="description"
-              name="description"
-              value={form.description}
+              id="message"
+              name="message"
+              value={form.message}
               onChange={handleChange}
               rows="6"
               required
-              placeholder="Describe your project..."
+              placeholder="Write the testimonial message..."
               className="w-full resize-y rounded-lg border border-slate-300 px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
             />
           </div>
@@ -307,7 +322,7 @@ function Projects() {
           {/* Image */}
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              Project Image
+              Testimonial Image
             </label>
 
             <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-5">
@@ -330,7 +345,9 @@ function Projects() {
                 disabled={uploadingImage || !imageFile}
                 className="mt-4 rounded-lg bg-slate-700 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {uploadingImage ? "Uploading..." : "Upload Image"}
+                {uploadingImage
+                  ? "Uploading..."
+                  : "Upload Image"}
               </button>
             </div>
 
@@ -343,80 +360,15 @@ function Projects() {
                 <div className="inline-block overflow-hidden rounded-xl border border-slate-200 bg-white p-2 shadow-sm">
                   <img
                     src={form.image}
-                    alt="Project"
-                    className="h-40 w-64 rounded-lg object-cover"
+                    alt="Testimonial"
+                    className="h-32 w-32 rounded-full object-cover"
                   />
                 </div>
               </div>
             )}
           </div>
 
-          {/* Technologies */}
-          <div>
-            <label
-              htmlFor="technologies"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Technologies
-            </label>
-
-            <input
-              id="technologies"
-              type="text"
-              name="technologies"
-              value={form.technologies}
-              onChange={handleChange}
-              placeholder="React, Node.js, PostgreSQL"
-              className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
-            />
-
-            <p className="mt-1.5 text-xs text-slate-400">
-              Separate technologies using commas.
-            </p>
-          </div>
-
-          {/* URLs */}
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <label
-                htmlFor="live_url"
-                className="mb-2 block text-sm font-medium text-slate-700"
-              >
-                Live URL
-              </label>
-
-              <input
-                id="live_url"
-                type="text"
-                name="live_url"
-                value={form.live_url}
-                onChange={handleChange}
-                placeholder="https://example.com"
-                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="github_url"
-                className="mb-2 block text-sm font-medium text-slate-700"
-              >
-                GitHub URL
-              </label>
-
-              <input
-                id="github_url"
-                type="text"
-                name="github_url"
-                value={form.github_url}
-                onChange={handleChange}
-                placeholder="https://github.com/username/project"
-                className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
-              />
-            </div>
-          </div>
-
-          {/* Form Buttons */}
+          {/* Buttons */}
           <div className="flex justify-end gap-3 border-t border-slate-200 pt-6">
             {editingId && (
               <button
@@ -436,47 +388,41 @@ function Projects() {
               {saving
                 ? "Saving..."
                 : editingId
-                ? "Update Project"
-                : "Add Project"}
+                ? "Update Testimonial"
+                : "Add Testimonial"}
             </button>
           </div>
         </form>
       </div>
 
-      {/* Existing Projects */}
+      {/* Existing Testimonials */}
       <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
         <div className="border-b border-slate-200 px-6 py-5">
           <h2 className="text-lg font-semibold text-slate-900">
-            Existing Projects
+            Existing Testimonials
           </h2>
 
           <p className="mt-1 text-sm text-slate-500">
-            Projects currently stored in your portfolio.
+            Testimonials currently stored in your portfolio.
           </p>
         </div>
 
-        {projects.length === 0 ? (
+        {testimonials.length === 0 ? (
           <div className="px-6 py-10 text-center">
             <p className="text-sm text-slate-500">
-              No projects found.
+              No testimonials found.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[1100px] text-left text-sm">
+            <table className="w-full min-w-[800px] text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
                 <tr>
                   <th className="px-6 py-4 font-semibold">Image</th>
-                  <th className="px-6 py-4 font-semibold">Title</th>
+                  <th className="px-6 py-4 font-semibold">Name</th>
+                  <th className="px-6 py-4 font-semibold">Role</th>
                   <th className="px-6 py-4 font-semibold">
-                    Description
-                  </th>
-                  <th className="px-6 py-4 font-semibold">
-                    Technologies
-                  </th>
-                  <th className="px-6 py-4 font-semibold">Live URL</th>
-                  <th className="px-6 py-4 font-semibold">
-                    GitHub URL
+                    Message
                   </th>
                   <th className="px-6 py-4 text-right font-semibold">
                     Actions
@@ -485,99 +431,57 @@ function Projects() {
               </thead>
 
               <tbody className="divide-y divide-slate-100">
-                {projects.map((project) => (
+                {testimonials.map((testimonial) => (
                   <tr
-                    key={project.id}
+                    key={testimonial.id}
                     className="transition hover:bg-slate-50"
                   >
                     {/* Image */}
                     <td className="px-6 py-4">
-                      {project.image ? (
+                      {testimonial.image ? (
                         <img
-                          src={project.image}
-                          alt={project.title}
-                          className="h-16 w-24 rounded-lg border border-slate-200 object-cover"
+                          src={testimonial.image}
+                          alt={testimonial.name}
+                          className="h-14 w-14 rounded-full border border-slate-200 object-cover"
                         />
                       ) : (
                         <span className="text-slate-400">-</span>
                       )}
                     </td>
 
-                    {/* Title */}
+                    {/* Name */}
                     <td className="px-6 py-4 font-medium text-slate-900">
-                      {project.title}
+                      {testimonial.name}
                     </td>
 
-                    {/* Description */}
-                    <td className="max-w-xs px-6 py-4 text-slate-600">
+                    {/* Role */}
+                    <td className="px-6 py-4 text-slate-600">
+                      {testimonial.role || "-"}
+                    </td>
+
+                    {/* Message */}
+                    <td className="max-w-md px-6 py-4 text-slate-600">
                       <p className="line-clamp-3">
-                        {project.description}
+                        {testimonial.message}
                       </p>
-                    </td>
-
-                    {/* Technologies */}
-                    <td className="px-6 py-4">
-                      {Array.isArray(project.technologies) &&
-                      project.technologies.length > 0 ? (
-                        <div className="flex max-w-xs flex-wrap gap-1.5">
-                          {project.technologies.map((technology, index) => (
-                            <span
-                              key={index}
-                              className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700"
-                            >
-                              {technology}
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-slate-400">-</span>
-                      )}
-                    </td>
-
-                    {/* Live URL */}
-                    <td className="px-6 py-4">
-                      {project.live_url ? (
-                        <a
-                          href={project.live_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="font-medium text-slate-700 hover:text-slate-900 hover:underline"
-                        >
-                          View
-                        </a>
-                      ) : (
-                        <span className="text-slate-400">-</span>
-                      )}
-                    </td>
-
-                    {/* GitHub URL */}
-                    <td className="px-6 py-4">
-                      {project.github_url ? (
-                        <a
-                          href={project.github_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="font-medium text-slate-700 hover:text-slate-900 hover:underline"
-                        >
-                          GitHub
-                        </a>
-                      ) : (
-                        <span className="text-slate-400">-</span>
-                      )}
                     </td>
 
                     {/* Actions */}
                     <td className="px-6 py-4">
                       <div className="flex justify-end gap-2">
                         <button
-                          onClick={() => handleEdit(project)}
+                          onClick={() =>
+                            handleEdit(testimonial)
+                          }
                           className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-100"
                         >
                           Edit
                         </button>
 
                         <button
-                          onClick={() => handleDelete(project.id)}
+                          onClick={() =>
+                            handleDelete(testimonial.id)
+                          }
                           className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50"
                         >
                           Delete
@@ -595,5 +499,5 @@ function Projects() {
   );
 }
 
-export default Projects;
+export default Testimonials;
 
