@@ -19,6 +19,10 @@ function Navbar() {
             Projects
           </a>
 
+          <a href="#services" className="hover:text-gray-600">
+            Services
+          </a>
+
           <a href="#skills" className="hover:text-gray-600">
             Skills
           </a>

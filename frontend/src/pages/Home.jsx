@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -5,11 +6,17 @@ function Home() {
   const [about, setAbout] = useState(null);
   const [skills, setSkills] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [services, setServices] = useState([]);
+  const [blogs, setBlogs] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
+  const [experience, setExperience] = useState([]);
 
   useEffect(() => {
     const fetchAbout = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/about");
+        const response = await axios.get(
+          "http://localhost:5000/api/about"
+        );
         setAbout(response.data);
       } catch (error) {
         console.error("Error fetching about data:", error);
@@ -18,7 +25,9 @@ function Home() {
 
     const fetchSkills = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/skills");
+        const response = await axios.get(
+          "http://localhost:5000/api/skills"
+        );
         setSkills(response.data);
       } catch (error) {
         console.error("Error fetching skills:", error);
@@ -36,9 +45,57 @@ function Home() {
       }
     };
 
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/services"
+        );
+        setServices(response.data);
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
+
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/blogs"
+        );
+        setBlogs(response.data);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
+    };
+
+    const fetchTestimonials = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/testimonials"
+        );
+        setTestimonials(response.data);
+      } catch (error) {
+        console.error("Error fetching testimonials:", error);
+      }
+    };
+
+    const fetchExperience = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/experience"
+        );
+        setExperience(response.data);
+      } catch (error) {
+        console.error("Error fetching experience:", error);
+      }
+    };
+
     fetchAbout();
     fetchSkills();
     fetchProjects();
+    fetchServices();
+    fetchBlogs();
+    fetchTestimonials();
+    fetchExperience();
   }, []);
 
   if (!about) {
@@ -98,7 +155,9 @@ function Home() {
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
                     className="bg-black h-3 rounded-full"
-                    style={{ width: `${skill.proficiency}%` }}
+                    style={{
+                      width: `${skill.proficiency}%`,
+                    }}
                   ></div>
                 </div>
               </div>
@@ -140,14 +199,16 @@ function Home() {
                   {project.technologies &&
                     project.technologies.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-5">
-                        {project.technologies.map((technology, index) => (
-                          <span
-                            key={index}
-                            className="px-3 py-1 bg-gray-100 rounded-full text-sm"
-                          >
-                            {technology}
-                          </span>
-                        ))}
+                        {project.technologies.map(
+                          (technology, index) => (
+                            <span
+                              key={index}
+                              className="px-3 py-1 bg-gray-100 rounded-full text-sm"
+                            >
+                              {technology}
+                            </span>
+                          )
+                        )}
                       </div>
                     )}
 
@@ -180,8 +241,157 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* Services Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-10">
+            Services
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {services.map((service) => (
+              <div
+                key={service.id}
+                className="border rounded-lg p-6 shadow-sm"
+              >
+                {service.icon && (
+                  <div className="text-4xl mb-4 text-center">
+                    {service.icon}
+                  </div>
+                )}
+
+                <h3 className="text-2xl font-semibold mb-3 text-center">
+                  {service.title}
+                </h3>
+
+                <p className="text-gray-600 text-center">
+                  {service.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Blog Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-10">
+            Blog
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {blogs.map((blog) => (
+              <article
+                key={blog.id}
+                className="border rounded-lg overflow-hidden shadow-sm"
+              >
+                {blog.image && (
+                  <img
+                    src={blog.image}
+                    alt={blog.title}
+                    className="w-full h-56 object-cover"
+                  />
+                )}
+
+                <div className="p-6">
+                  <h3 className="text-2xl font-semibold mb-3">
+                    {blog.title}
+                  </h3>
+
+                  <p className="text-gray-600">
+                    {blog.content}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-10">
+            Testimonials
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {testimonials.map((testimonial) => (
+              <div
+                key={testimonial.id}
+                className="border rounded-lg p-6 shadow-sm"
+              >
+                {testimonial.image && (
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className="w-20 h-20 rounded-full object-cover mx-auto mb-4"
+                  />
+                )}
+
+                <p className="text-gray-600 mb-5">
+                  "{testimonial.message}"
+                </p>
+
+                <h3 className="text-xl font-semibold text-center">
+                  {testimonial.name}
+                </h3>
+
+                {testimonial.role && (
+                  <p className="text-gray-500 text-center mt-1">
+                    {testimonial.role}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Experience Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-10">
+            Experience
+          </h2>
+
+          <div className="space-y-8">
+            {experience.map((item) => (
+              <div
+                key={item.id}
+                className="border-l-4 border-black pl-6 py-2"
+              >
+                <h3 className="text-2xl font-semibold">
+                  {item.role}
+                </h3>
+
+                <p className="text-lg font-medium text-gray-700 mt-1">
+                  {item.company}
+                </p>
+
+                <p className="text-sm text-gray-500 mt-1">
+                  {item.start_date
+                    ? new Date(item.start_date).toLocaleDateString()
+                    : "Start date not available"}{" "}
+                  -{" "}
+                  {item.end_date
+                    ? new Date(item.end_date).toLocaleDateString()
+                    : "Present"}
+                </p>
+
+                <p className="text-gray-600 mt-3">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
 
 export default Home;
+
