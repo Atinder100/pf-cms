@@ -59,11 +59,12 @@ app.get("/api/health", async (req, res) => {
       message: "API and database are working",
       databaseTime: result.rows[0].now,
     });
-  } catch (error) {
+    } catch (error) {
     console.error("Database error:", error);
 
     res.status(500).json({
       message: "Database connection failed",
+      error: error.message,
     });
   }
 });
