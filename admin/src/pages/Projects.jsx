@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 
 function Projects() {
   const [projects, setProjects] = useState([]);
@@ -30,7 +31,7 @@ function Projects() {
   const fetchProjects = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/projects",
+        `${API_URL}/api/projects`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -69,7 +70,7 @@ function Projects() {
       formData.append("image", imageFile);
 
       const response = await axios.post(
-        "http://localhost:5000/upload/image",
+        `${API_URL}/upload/image`,
         formData,
         {
           headers: {
@@ -117,7 +118,7 @@ function Projects() {
 
       if (editingId) {
         await axios.put(
-          `http://localhost:5000/api/projects/${editingId}`,
+          `${API_URL}/api/projects/${editingId}`,
           projectData,
           {
             headers: {
@@ -129,7 +130,7 @@ function Projects() {
         setMessage("Project updated successfully");
       } else {
         await axios.post(
-          "http://localhost:5000/api/projects",
+          `${API_URL}/api/projects`,
           projectData,
           {
             headers: {
@@ -182,7 +183,7 @@ function Projects() {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/projects/${id}`,
+        `${API_URL}/api/projects/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -596,4 +597,3 @@ function Projects() {
 }
 
 export default Projects;
-

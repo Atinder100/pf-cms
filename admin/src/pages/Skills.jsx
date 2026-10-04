@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 
 function Skills() {
   const [skills, setSkills] = useState([]);
@@ -24,7 +25,7 @@ function Skills() {
   const fetchSkills = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/skills",
+        `${API_URL}/api/skills`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -59,7 +60,7 @@ function Skills() {
 
       if (editingId) {
         response = await axios.put(
-          `http://localhost:5000/api/skills/${editingId}`,
+          `${API_URL}/api/skills/${editingId}`,
           form,
           {
             headers: {
@@ -71,7 +72,7 @@ function Skills() {
         setMessage("Skill updated successfully");
       } else {
         response = await axios.post(
-          "http://localhost:5000/api/skills",
+          `${API_URL}/api/skills`,
           form,
           {
             headers: {
@@ -125,7 +126,7 @@ function Skills() {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/skills/${id}`,
+        `${API_URL}/api/skills/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -393,4 +394,3 @@ function Skills() {
 }
 
 export default Skills;
-

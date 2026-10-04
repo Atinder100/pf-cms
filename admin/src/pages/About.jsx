@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 
 function About() {
   const [about, setAbout] = useState({
@@ -25,7 +26,7 @@ function About() {
   const fetchAbout = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/about",
+        `${API_URL}/api/about`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -67,7 +68,7 @@ function About() {
       formData.append("image", imageFile);
 
       const response = await axios.post(
-        "http://localhost:5000/upload/image",
+        `${API_URL}/upload/image`,
         formData,
         {
           headers: {
@@ -105,7 +106,7 @@ function About() {
 
       if (about.id) {
         response = await axios.put(
-          `http://localhost:5000/api/about/${about.id}`,
+          `${API_URL}/api/about/${about.id}`,
           {
             title: about.title,
             description: about.description,
@@ -122,7 +123,7 @@ function About() {
         setMessage("About updated successfully");
       } else {
         response = await axios.post(
-          "http://localhost:5000/api/about",
+          `${API_URL}/api/about`,
           {
             title: about.title,
             description: about.description,
@@ -301,4 +302,3 @@ function About() {
 }
 
 export default About;
-

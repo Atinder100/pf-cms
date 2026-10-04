@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 
 function Services() {
   const [services, setServices] = useState([]);
@@ -24,7 +25,7 @@ function Services() {
   const fetchServices = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/services",
+        `${API_URL}/api/services`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -62,7 +63,7 @@ function Services() {
 
       if (editingId) {
         await axios.put(
-          `http://localhost:5000/api/services/${editingId}`,
+          `${API_URL}/api/services/${editingId}`,
           serviceData,
           {
             headers: {
@@ -74,7 +75,7 @@ function Services() {
         setMessage("Service updated successfully");
       } else {
         await axios.post(
-          "http://localhost:5000/api/services",
+          `${API_URL}/api/services`,
           serviceData,
           {
             headers: {
@@ -121,7 +122,7 @@ function Services() {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/services/${id}`,
+        `${API_URL}/api/services/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -353,4 +354,3 @@ function Services() {
 }
 
 export default Services;
-

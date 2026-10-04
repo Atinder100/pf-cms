@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 
 function Experience() {
   const [experiences, setExperiences] = useState([]);
@@ -27,7 +28,7 @@ function Experience() {
   const fetchExperience = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/experience",
+        `${API_URL}/api/experience`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -68,7 +69,7 @@ function Experience() {
 
       if (editingId) {
         await axios.put(
-          `http://localhost:5000/api/experience/${editingId}`,
+          `${API_URL}/api/experience/${editingId}`,
           experienceData,
           {
             headers: {
@@ -80,7 +81,7 @@ function Experience() {
         setMessage("Experience updated successfully");
       } else {
         await axios.post(
-          "http://localhost:5000/api/experience",
+          `${API_URL}/api/experience`,
           experienceData,
           {
             headers: {
@@ -134,7 +135,7 @@ function Experience() {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/experience/${id}`,
+        `${API_URL}/api/experience/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -473,4 +474,3 @@ function Experience() {
 }
 
 export default Experience;
-

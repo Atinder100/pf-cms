@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 
 function Messages() {
   const [messages, setMessages] = useState([]);
@@ -10,7 +11,7 @@ function Messages() {
       const token = localStorage.getItem("accessToken");
 
       const response = await axios.get(
-        "http://localhost:5000/api/messages",
+        `${API_URL}/api/messages`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -43,7 +44,7 @@ function Messages() {
       const token = localStorage.getItem("accessToken");
 
       await axios.delete(
-        `http://localhost:5000/api/messages/${id}`,
+        `${API_URL}/api/messages/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

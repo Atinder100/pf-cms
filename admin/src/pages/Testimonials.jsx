@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 
 function Testimonials() {
   const [testimonials, setTestimonials] = useState([]);
@@ -28,7 +29,7 @@ function Testimonials() {
   const fetchTestimonials = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/testimonials",
+        `${API_URL}/api/testimonials`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -67,7 +68,7 @@ function Testimonials() {
       formData.append("image", imageFile);
 
       const response = await axios.post(
-        "http://localhost:5000/upload/image",
+        `${API_URL}/upload/image`,
         formData,
         {
           headers: {
@@ -110,7 +111,7 @@ function Testimonials() {
 
       if (editingId) {
         await axios.put(
-          `http://localhost:5000/api/testimonials/${editingId}`,
+          `${API_URL}/api/testimonials/${editingId}`,
           testimonialData,
           {
             headers: {
@@ -122,7 +123,7 @@ function Testimonials() {
         setMessage("Testimonial updated successfully");
       } else {
         await axios.post(
-          "http://localhost:5000/api/testimonials",
+          `${API_URL}/api/testimonials`,
           testimonialData,
           {
             headers: {
@@ -172,7 +173,7 @@ function Testimonials() {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/testimonials/${id}`,
+        `${API_URL}/api/testimonials/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -500,4 +501,3 @@ function Testimonials() {
 }
 
 export default Testimonials;
-

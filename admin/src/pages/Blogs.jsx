@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 
 function Blogs() {
   const [blogs, setBlogs] = useState([]);
@@ -27,7 +28,7 @@ function Blogs() {
   const fetchBlogs = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/blogs",
+        `${API_URL}/api/blogs`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -66,7 +67,7 @@ function Blogs() {
       formData.append("image", imageFile);
 
       const response = await axios.post(
-        "http://localhost:5000/upload/image",
+        `${API_URL}/upload/image`,
         formData,
         {
           headers: {
@@ -108,7 +109,7 @@ function Blogs() {
 
       if (editingId) {
         await axios.put(
-          `http://localhost:5000/api/blogs/${editingId}`,
+          `${API_URL}/api/blogs/${editingId}`,
           blogData,
           {
             headers: {
@@ -120,7 +121,7 @@ function Blogs() {
         setMessage("Blog updated successfully");
       } else {
         await axios.post(
-          "http://localhost:5000/api/blogs",
+          `${API_URL}/api/blogs`,
           blogData,
           {
             headers: {
@@ -168,7 +169,7 @@ function Blogs() {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/blogs/${id}`,
+        `${API_URL}/api/blogs/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -463,4 +464,3 @@ function Blogs() {
 }
 
 export default Blogs;
-
