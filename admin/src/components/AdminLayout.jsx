@@ -19,7 +19,7 @@ function AdminLayout() {
     { name: "Experience", path: "/experience" },
     { name: "Testimonials", path: "/testimonials" },
     { name: "Services", path: "/services" },
-    
+    { name: "Messages", path: "/messages" },
   ];
 
   return (

@@ -13,12 +13,14 @@ import experienceRoutes from "./src/routes/experienceRoutes.js";
 import testimonialsRoutes from "./src/routes/testimonialsRoutes.js";
 import servicesRoutes from "./src/routes/servicesRoutes.js";
 import uploadRoutes from "./src/routes/uploadRoutes.js";
+import contactRoutes from "./src/routes/contactRoutes.js";
+import messageRoutes from "./src/routes/messageRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
-// CORS configuration
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -28,7 +30,7 @@ app.use(
 
 app.use(express.json());
 
-// Routes
+
 app.use("/auth", authRoutes);
 app.use("/api/about", aboutRoutes);
 app.use("/api/skills", skillsRoutes);
@@ -38,15 +40,17 @@ app.use("/api/experience", experienceRoutes);
 app.use("/api/testimonials", testimonialsRoutes);
 app.use("/api/services", servicesRoutes);
 app.use("/upload", uploadRoutes);
+app.use("/contact", contactRoutes);
+app.use("/api/messages", messageRoutes);
 
-// Root route
+
 app.get("/", (req, res) => {
   res.json({
     message: "Portfolio CMS API is running",
   });
 });
 
-// Health check
+
 app.get("/api/health", async (req, res) => {
   try {
     const result = await pool.query("SELECT NOW()");
@@ -64,7 +68,7 @@ app.get("/api/health", async (req, res) => {
   }
 });
 
-// Error handling middleware
+
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     return res.status(400).json({
@@ -84,7 +88,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Server
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

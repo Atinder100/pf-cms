@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -10,6 +9,16 @@ function Home() {
   const [blogs, setBlogs] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
   const [experience, setExperience] = useState([]);
+
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [contactStatus, setContactStatus] = useState("");
+  const [contactError, setContactError] = useState("");
+  const [contactLoading, setContactLoading] = useState(false);
 
   useEffect(() => {
     const fetchAbout = async () => {
@@ -97,6 +106,50 @@ function Home() {
     fetchTestimonials();
     fetchExperience();
   }, []);
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+
+    setContactStatus("");
+    setContactError("");
+
+    const nameRegex = /^[A-Za-z ]+$/;
+
+    if (!nameRegex.test(contactForm.name)) {
+      setContactError(
+        "Name can contain only alphabets and spaces."
+      );
+      return;
+    }
+
+    try {
+      setContactLoading(true);
+
+      const response = await axios.post(
+        "http://localhost:5000/contact",
+        contactForm
+      );
+
+      setContactStatus(
+        response.data.message || "Message sent successfully."
+      );
+
+      setContactForm({
+        name: "",
+        email: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Contact form error:", error);
+
+      setContactError(
+        error.response?.data?.message ||
+          "Failed to send message. Please try again."
+      );
+    } finally {
+      setContactLoading(false);
+    }
+  };
 
   if (!about) {
     return (
@@ -389,9 +442,102 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* Contact Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-10">
+            Contact Me
+          </h2>
+
+          <form
+            onSubmit={handleContactSubmit}
+            className="border rounded-lg p-6 shadow-sm space-y-6"
+          >
+            <div>
+              <label className="block font-medium mb-2">
+                Name
+              </label>
+
+              <input
+                type="text"
+                value={contactForm.name}
+                onChange={(e) =>
+                  setContactForm({
+                    ...contactForm,
+                    name: e.target.value,
+                  })
+                }
+                placeholder="Enter your name"
+                required
+                className="w-full border rounded-lg px-4 py-3"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium mb-2">
+                Email
+              </label>
+
+              <input
+                type="email"
+                value={contactForm.email}
+                onChange={(e) =>
+                  setContactForm({
+                    ...contactForm,
+                    email: e.target.value,
+                  })
+                }
+                placeholder="Enter your email"
+                required
+                className="w-full border rounded-lg px-4 py-3"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium mb-2">
+                Message
+              </label>
+
+              <textarea
+                value={contactForm.message}
+                onChange={(e) =>
+                  setContactForm({
+                    ...contactForm,
+                    message: e.target.value,
+                  })
+                }
+                placeholder="Enter your message"
+                rows="6"
+                required
+                className="w-full border rounded-lg px-4 py-3"
+              ></textarea>
+            </div>
+
+            {contactError && (
+              <p className="text-red-600">
+                {contactError}
+              </p>
+            )}
+
+            {contactStatus && (
+              <p className="text-green-600">
+                {contactStatus}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={contactLoading}
+              className="w-full rounded-lg bg-black px-6 py-3 text-white transition hover:bg-gray-800 disabled:opacity-50"
+            >
+              {contactLoading ? "Sending..." : "Send Message"}
+            </button>
+          </form>
+        </div>
+      </section>
     </div>
   );
 }
 
 export default Home;
-

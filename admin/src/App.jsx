@@ -10,6 +10,7 @@ import Blogs from "./pages/Blogs";
 import Testimonials from "./pages/Testimonials";
 import Experience from "./pages/Experience";
 import Services from "./pages/Services";
+import Messages from "./pages/Messages";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./components/AdminLayout";
@@ -37,6 +38,15 @@ function App() {
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/experience" element={<Experience />} />
           <Route path="/services" element={<Services />} />
+          <Route
+            path="/messages"
+            element={
+              <ProtectedRoute>
+                <Messages />
+              </ProtectedRoute>
+            }
+          />
+          
         </Route>
       </Routes>
     </BrowserRouter>

@@ -5,7 +5,8 @@ function Dashboard() {
   const sections = [
     {
       name: "About",
-      description: "Manage your portfolio introduction and profile information.",
+      description:
+        "Manage your portfolio introduction and profile information.",
       path: "/about",
     },
     {
@@ -38,6 +39,11 @@ function Dashboard() {
       description: "Manage the services you provide.",
       path: "/services",
     },
+    {
+      name: "Messages",
+      description: "View and manage messages submitted through your contact form.",
+      path: "/messages",
+    },
   ];
 
   return (
@@ -61,7 +67,7 @@ function Dashboard() {
           </p>
 
           <p className="mt-2 text-3xl font-bold text-slate-900">
-            7
+            8
           </p>
         </div>
 
