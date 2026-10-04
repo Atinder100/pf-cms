@@ -23,7 +23,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.ADMIN_URL || "http://localhost:5173",
     credentials: true,
   })
 );
