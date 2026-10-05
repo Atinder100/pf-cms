@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_URL from "../config";
 
 function Home() {
   const [about, setAbout] = useState(null);
@@ -24,7 +25,7 @@ function Home() {
     const fetchAbout = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/about"
+          `${API_URL}/api/about`
         );
         setAbout(response.data);
       } catch (error) {
@@ -35,7 +36,7 @@ function Home() {
     const fetchSkills = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/skills"
+          `${API_URL}/api/skills`
         );
         setSkills(response.data);
       } catch (error) {
@@ -46,7 +47,7 @@ function Home() {
     const fetchProjects = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/projects"
+          `${API_URL}/api/projects`
         );
         setProjects(response.data);
       } catch (error) {
@@ -57,7 +58,7 @@ function Home() {
     const fetchServices = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/services"
+          `${API_URL}/api/services`
         );
         setServices(response.data);
       } catch (error) {
@@ -68,7 +69,7 @@ function Home() {
     const fetchBlogs = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/blogs"
+          `${API_URL}/api/blogs`
         );
         setBlogs(response.data);
       } catch (error) {
@@ -79,7 +80,7 @@ function Home() {
     const fetchTestimonials = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/testimonials"
+          `${API_URL}/api/testimonials`
         );
         setTestimonials(response.data);
       } catch (error) {
@@ -90,7 +91,7 @@ function Home() {
     const fetchExperience = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/experience"
+          `${API_URL}/api/experience`
         );
         setExperience(response.data);
       } catch (error) {
@@ -126,7 +127,7 @@ function Home() {
       setContactLoading(true);
 
       const response = await axios.post(
-        "http://localhost:5000/contact",
+        `${API_URL}/contact`,
         contactForm
       );
 
