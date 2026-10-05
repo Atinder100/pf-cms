@@ -23,7 +23,13 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.ADMIN_URL || "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://pf-cms-admin.onrender.com",
+      "https://pf-cms.vercel.app",
+      "https://pf-cms.onrender.com",
+      process.env.ADMIN_URL,
+    ].filter(Boolean),
     credentials: true,
   })
 );
